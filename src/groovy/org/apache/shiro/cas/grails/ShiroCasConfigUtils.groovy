@@ -28,6 +28,9 @@ class ShiroCasConfigUtils {
     private static String singleSignOutLogoutParameterName
     private static String filterChainDefinitions
 
+    // Should be 'CAS20' or 'SAML11'
+    private static String protocol
+
     static void initialize(ConfigObject config) {
         processRequiredConfiguration(config)
 
@@ -87,6 +90,7 @@ class ShiroCasConfigUtils {
         configuredLoginUrl = config.security.shiro.cas.loginUrl ?: null
         configuredLogoutUrl = config.security.shiro.cas.logoutUrl ?: null
         failurePath = config.security.shiro.cas.failurePath ?: "/auth/cas-failure"
+        protocol = config.security.shiro.cas.protocol ?: 'CAS20'
     }
 
     private static boolean minimalConfigurationValid() {

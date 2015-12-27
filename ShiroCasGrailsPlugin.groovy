@@ -5,6 +5,7 @@ import org.apache.shiro.cas.grails.ShiroCasConfigUtils
 import org.jasig.cas.client.session.SingleSignOutFilter
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator
+import org.jasig.cas.client.validation.Saml11TicketValidator
 
 class ShiroCasGrailsPlugin {
     def version = "0.5.2-SNAPSHOT"
@@ -29,8 +30,17 @@ class ShiroCasGrailsPlugin {
         def securityConfig = application.config.security.shiro
         def beanBuilder = delegate as BeanBuilder
         ShiroCasConfigUtils.initialize(application.config)
-        casTicketValidator(Cas20ServiceTicketValidator, ShiroCasConfigUtils.serverUrl) {
-            encoding = "UTF-8"
+        if (ShiroCasConfigUtils.protocol == 'SAML11') {
+            casTicketValidator(Saml11TicketValidator, ShiroCasConfigUtils.serverUrl) {
+                serverName(ShiroCasConfigUtils.serviceUrl)
+                useSession(true)
+                redirectAfterValidation(true)
+                tolerance(50000)
+            }
+        } else {
+            casTicketValidator(Cas20ServiceTicketValidator, ShiroCasConfigUtils.serverUrl) {
+                encoding = "UTF-8"
+            }
         }
         casSubjectFactory(CasSubjectFactory)
         def shiroSecurityManager = beanBuilder.getBeanDefinition("shiroSecurityManager")

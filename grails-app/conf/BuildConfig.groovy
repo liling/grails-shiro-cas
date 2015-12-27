@@ -20,6 +20,9 @@ grails.project.dependency.resolution = {
         test "org.spockframework:spock-grails-support:0.7-groovy-2.0", {
             export = false
         }
+        // For SAML 1.1
+        compile "org.opensaml:opensaml:1.1"
+        compile "xml-security:xmlsec:1.3.0"
     }
 
     plugins {
